@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}">
+        {% block stylesheets %}{% endblock %}
+    </head>
+    <body class="d-flex flex-column min-vh-100">
+        <nav class="navbar navbar-expand-sm bg-primary navbar-dark">
+        <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item{% if app.request.get('_route') == 'app.index' %}  active{% endif %}">
+                <a class="nav-link" href="{{ path('app.index') }}">Zarządzanie</a>
+                </li>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <li class="nav-item{% if app.request.get('_route') == 'admin.users' %}  active{% endif %}">
+                    <a class="nav-link" href="{{ path('admin.users') }}">Użytkownicy</a>
+                    </li>
+                    <li class="nav-item{% if app.request.get('_route') == 'admin.devices' %}  active{% endif %}">
+                    <a class="nav-link" href="{{ path('admin.devices') }}">Urządzenia IOT</a>
+                    </li>
+                    <li class="nav-item{% if app.request.get('_route') == 'admin.configurate' %}  active{% endif %}">
+                    <a class="nav-link" href="{{ path('admin.configurate') }}">Konfiguracja domu</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+        <div class="navbar-collapse collapse w-100 mx-auto order-0">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                <a class="nav-link" href="#">Ustawienia</a>
+                </li>
+                <li class="nav-item active">
+                <a class="nav-link" href="{{ path('app_logout') }}">Wyloguj się</a>
+                </li>
+            </ul>
+        </div>
+        </nav>
+        {% block body %}
+            <div class="container p-2 flex-grow-1">
+                {% block container %}{% endblock %}
+            </div>
+        {% endblock %}
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        {% block javascripts %}{% endblock %}
+    </body>
+</html>

@@ -1,0 +1,39 @@
+{% extends 'app.html.twig' %}
+
+{% block title %}Urządzenia IOT{% endblock %}
+
+{% block container %}
+{% for message in app.flashes('success') %}
+    <div class="alert alert-success">
+        {{ message }}
+    </div>
+{% endfor %}
+<div class="d-flex align-items-center">
+    <div class="p-2 display-4 flex-grow-1">Urządzenia IOT:</div>
+    <div class="p-2">
+        <a class="btn btn-success" href="{{ path('admin.addDevice') }}">Dodaj nowe urządzenie</a>
+    </div>
+</div>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Ardes MAC</th>
+            <th>Rodzaj</th>
+            <th>Akcje</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for device in devices %}
+            <tr>
+                <td>{{ device.id }}</td>
+                <td>{{ device.mac }}</td>
+                <td>{{ device.type.name }}</td>
+                <td>
+                    <a href="{{ path('admin.deleteDevice', {id: device.id}) }}" class="text-danger">Usuń</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

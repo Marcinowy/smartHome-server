@@ -1,0 +1,18 @@
+{% extends 'app.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block container %}
+<h3>{{ title }}:</h3>
+{{ form(form) }}
+{% endblock %}
+{% block javascripts %}
+<script>
+var ajaxURL = '{{ path('admin.ajaxURL') }}';
+</script>
+{% if (scripts is defined) %}
+    {% for script in scripts %}
+        <script type="text/javascript" src="{{ asset(script) }}"></script>
+    {% endfor %}
+{% endif %}
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends 'app.html.twig' %}
+
+{% block title %}Lista użytkowników{% endblock %}
+
+{% block container %}
+{% for message in app.flashes('success') %}
+    <div class="alert alert-success">
+        {{ message }}
+    </div>
+{% endfor %}
+<div class="d-flex align-items-center">
+    <div class="p-2 display-4 flex-grow-1">Lista użytkowników:</div>
+    <div class="p-2">
+        <a class="btn btn-success" href="{{ path('admin.addUser') }}">Dodaj użytkownika</a>
+    </div>
+</div>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Użytkownik</th>
+            <th>Role</th>
+            <th>Akcje</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.roles|join(', ')|replace({'ROLE_ADMIN': 'Admin', 'ROLE_CONTROL': 'Kontrola systemu', 'ROLE_USER': 'Dostęp do strony'}) }}</td>
+                <td>
+                    <a href="{{ path('admin.deleteUser', {id: user.id}) }}" class="text-danger">Usuń</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

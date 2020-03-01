@@ -1,0 +1,13 @@
+#hint_container {
+	position: fixed;
+	display: none;
+	background-color: #dcdcdc;
+	border: 1px solid #424242;
+	color: #424242;
+	font-size: 14px;
+	padding: 3px 7px;
+	border-radius: 5px;
+	z-index: 9999999;
+	max-width: 12%;
+	font-family: Open Sans,sans-serif;
+}

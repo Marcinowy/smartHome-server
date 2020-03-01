@@ -1,0 +1,55 @@
+{% extends 'app.html.twig' %}
+
+{% block title %}Zarządzanie{% endblock %}
+{% block stylesheets %}
+<link rel="stylesheet" type="text/css" href="{{ asset('css/app.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ asset('css/hint.css') }}">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
+{% endblock %}
+
+{% block body %}
+<div class="app-loader flex-grow-1 d-flex justify-content-center align-items-center">
+    <div class="text-center" id="loading-cont">
+        <div class="spinner-grow text-primary" role="status">
+        </div>
+        <div id="loading-text">Ładowanie...</div>
+    </div>
+    <div class="text-center" id="error-cont"></div>
+</div>
+<div class="app flex-grow-1 d-none">
+    <div class="d-flex">
+        <div class="p-2 flex-grow-1">Status</div>
+        <div class="p-2">
+            {% for row in view %}
+                <div class="d-flex">
+                {% for cell in row %}
+                    <div class="p-2 d-flex align-items-center window hint" data-id="{{ cell.id }}" data-hint="{{ cell.name }}">
+                        <div class="flex-grow-1 no_connection">
+                            <div><i class="fas fa-exclamation-triangle"></i></div>
+                            <div>Brak połączenia</div>
+                        </div>
+                        <div class="flex-grow-1 closed d-none">
+                            <div>Zamknięte</div>
+                            <div><div class="btn btn-primary">Otwórz</div></div>
+                        </div>
+                        <div class="flex-grow-1 opened d-none">
+                            <div>Otwarte</div>
+                            <div><div class="btn btn-primary">Zamknij</div></div>
+                        </div>
+                    </div>
+                {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+var dataURL = '{{ path('app.token') }}';
+</script>
+<script type="text/javascript" src="{{ asset('js/app.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/hint.js') }}"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+{% endblock %}

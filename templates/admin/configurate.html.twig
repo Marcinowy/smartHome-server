@@ -1,0 +1,88 @@
+{% extends 'app.html.twig' %}
+
+{% block title %}Konfiguracja domu{% endblock %}
+
+{% block container %}
+{% for message in app.flashes('success') %}
+    <div class="alert alert-success">
+        {{ message }}
+    </div>
+{% endfor %}
+<div class="d-flex align-items-center">
+    <div class="p-2 display-4 flex-grow-1">Mapy:</div>
+    <div class="p-2">
+        <a class="btn btn-success" href="{{ path('admin.addMapConfigurate') }}">Dodaj nową mapę</a>
+    </div>
+</div>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nazwa</th>
+            <th>Mapa</th>
+            <th>Akcje</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for map in maps %}
+            <tr>
+                <td>{{ map.id }}</td>
+                <td>{{ map.name }}</td>
+                <td>{{ map.image }}</td>
+                <td>
+                    <a href="{{ path('admin.deleteMapConfigurate', {id: map.id}) }}" class="text-danger">Usuń</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div class="d-flex align-items-center">
+    <div class="p-2 display-4 flex-grow-1">Okna:</div>
+    <div class="p-2">
+        <a class="btn btn-success" href="{{ path('admin.addWindowConfigurate') }}">Dodaj nowe okno</a>
+    </div>
+</div>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nazwa</th>
+            <th>Pozycja</th>
+            <th>Mapa</th>
+            <th>Urządzenie obsługujące</th>
+            <th>Instrukcje kontroli</th>
+            <th>Akcje</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for window in windows %}
+            <tr>
+                <td>{{ window.id }}</td>
+                <td>{{ window.name }}</td>
+                <td>x:{{ window.xpos }} y:{{ window.ypos }}</td>
+                <td>
+                {% if (window.map) %}
+                    {{ window.map.name }} (ID: {{ window.map.id }})
+                {% else %}
+                    <i>Brak mapy</i>
+                {% endif %}
+                </td>
+                <td>ID:{{ window.deviceId.id }} ({{ window.deviceId.mac }})</td>
+                <td>
+                {% if (window.deviceId.type.id == 1) %}
+                    Otwieranie (pin): {{ window.controlInfo.pin_open }}<br>
+                    Zamykanie (pin): {{ window.controlInfo.pin_close }}<br>
+                    Status (pin): {{ window.controlInfo.pin_check }}<br>
+                {% else %}
+                    TODO
+                {% endif %}
+                </td>
+                <td>
+                    <a href="{{ path('admin.deleteWindowConfigurate', {id: window.id}) }}" class="text-danger">Usuń</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
