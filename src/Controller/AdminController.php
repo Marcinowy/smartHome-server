@@ -15,7 +15,9 @@ use App\Repository\MapRepository;
 use App\Repository\OknaRepository;
 use App\Repository\UserRepository;
 use App\Services\AdminAjax;
+use App\Services\FileUploader;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
@@ -168,7 +170,7 @@ class AdminController extends AbstractController
         return $this->render('admin/configurate.html.twig', compact('maps', 'windows'));
     }
 
-    public function addMapConfigurate(Request $request)
+    public function addMapConfigurate(Request $request, FileUploader $fileUploader)
     {
         $checkAdminRole = $this->checkAdminRole();
         if ($checkAdminRole!==null) return $checkAdminRole;
@@ -179,15 +181,26 @@ class AdminController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            $file = $form->get('image')->getData();
+            if ($file) {
+                $fileUploader->UploadFile($file);
+                if ($fileUploader->hasError()) {
+                    $this->addFlash('error', 'Problem z wysyłaniem pliku: ' . $fileUploader->getError());
+                } else {
+                    $map->setImage($fileUploader->getFileName());
+                }
+            }
 
-            $em->persist($map);
-            $em->flush();
+            if (!$fileUploader->hasError()) {
+                $em->persist($map);
+                $em->flush();
 
-            $this->addFlash('success', 'Pomyślnie dodano nową mapę.');
+                $this->addFlash('success', 'Pomyślnie dodano nową mapę.');
 
-            return $this->redirectToRoute('admin.configurate');
+                return $this->redirectToRoute('admin.configurate');
+            }
         }
 
         return $this->render('admin/add.html.twig', [
