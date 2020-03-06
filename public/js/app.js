@@ -2,18 +2,26 @@ var getAppData = response => {
     $.ajax({
         url: dataURL,
         type: 'POST',
-        success: (data) => {
-            response(data);
-        },
+        success: response,
         fail: () => {
             response({'success': false});
         }
     });
-};
-var connectionError = text => {
+},
+setWindow = (id, state) => {
+    let correctClass = ["no_connection", "closed", "opened"],
+    dom = $(".window[data-id=" + id + "]");
+    for (i in correctClass) {
+        dom.removeClass(correctClass[i]);
+    }
+    dom.addClass(correctClass[state]);
+    dom.children("div").addClass("d-none");
+    dom.children("div." + correctClass[state]).removeClass("d-none");
+},
+connectionError = text => {
     $("#loading-cont").addClass("d-none");
     $("#error-cont").append("<div>" + text + "</div>");
-}
+};
 $(document).ready(function() {
     getAppData(output => {
         var data = output;
@@ -21,10 +29,25 @@ $(document).ready(function() {
             var socket = io(data.socketServer, {query: "token=" + data.token, reconnection: false});
             socket.on('connect_error', () => {
                 connectionError("Wystąpił problem z połączeniem. Spróbuj ponownie później");
-            })
+            });
             socket.on('error', err => {
                 connectionError(err);
-            })
+            });
+            socket.on('connect', () => {
+                var windows = [];
+                $(".window").each(function() {
+                    windows.push($(this)[0].dataset.id);
+                });
+                socket.emit('getData', {windows: windows});
+                $(".app-loader").removeClass("d-flex").addClass("d-none");
+                $(".app").removeClass("d-none");
+            });
+            socket.on('data', data => {
+                console.log(data);
+                for (i in data.windows) {
+                    setWindow(data.windows[i].id, data.windows[i].state);
+                }
+            });
         }
     });
 })
