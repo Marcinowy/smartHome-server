@@ -26,7 +26,7 @@ $(document).ready(function() {
     getAppData(output => {
         var data = output;
         if (data.success) {
-            var socket = io(data.socketServer, {query: "token=" + data.token, reconnection: false});
+            socket = io(data.socketServer, {query: "token=" + data.token, reconnection: false});
             socket.on('connect_error', () => {
                 connectionError("Wystąpił problem z połączeniem. Spróbuj ponownie później");
             });
@@ -48,6 +48,18 @@ $(document).ready(function() {
                     setWindow(data.windows[i].id, data.windows[i].state);
                 }
             });
+        }
+    });
+    $(".close_window").click(function() {
+        if (socket.connected) {
+            let windowId = $(this).closest(".window")[0].dataset.id;
+            socket.emit('windowControl', {type: 'close', id: windowId});
+        }
+    });
+    $(".open_window").click(function() {
+        if (socket.connected) {
+            let windowId = $(this).closest(".window")[0].dataset.id;
+            socket.emit('windowControl', {type: 'open', id: windowId});
         }
     });
 })

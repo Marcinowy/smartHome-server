@@ -1,0 +1,35 @@
+$color_error: #f00;
+$color_closed: #0f0;
+$color_opened: #f00;
+@mixin window {
+    width: 140px;
+    height: 80px;
+    margin: 10px;
+    background-color: rgb(177, 165, 165);
+    border-radius: 4px;
+    text-align: center;
+    cursor: default;
+}
+.window {
+    @include window();
+    &.closed {
+        background-color: $color_closed;
+    }
+    &.opened {
+        background-color: $color_opened;
+    }
+}
+.no_connection {
+    .fas {
+        color: $color_error;
+        font-size: 22px;
+    }
+}
+.app-loader {
+	background-color: #141414;
+	color: #fff;
+    width: 100%;
+}
+#error-cont {
+    color: $color_error;
+}
