@@ -16,15 +16,18 @@ class DevicesType extends AbstractType
     {
         $builder
             ->add('mac', null, [
-                'label' => 'Adres MAC urządzenia'
+                'label' => 'Adres MAC urządzenia',
+                'required' => true,
             ])
             ->add('token', null, [
-                'label' => 'Token autoryzacyjny'
+                'label' => 'Token autoryzacyjny',
+                'required' => true,
             ])
             ->add('type', EntityType::class, [
                 'class' => IOTTypes::class,
                 'choice_label' => 'name',
-                'label' => 'Typ urządzenia'
+                'label' => 'Typ urządzenia',
+                'required' => true,
             ])
             ->add('submit', SubmitType::class, [
                 'attr' => [

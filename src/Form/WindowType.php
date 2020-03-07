@@ -17,7 +17,8 @@ class WindowType extends AbstractType
     {
         $builder
             ->add('name', null, [
-                'label' => 'Nazwa okna'
+                'label' => 'Nazwa okna',
+                'required' => true,
             ])
             ->add('map', EntityType::class, [
                 'class' => Map::class,
@@ -42,7 +43,8 @@ class WindowType extends AbstractType
             ->add('deviceId', EntityType::class, [
                 'class' => Devices::class,
                 'choice_label' => 'id',
-                'label' => 'ID urządzenia obsługującego okno'
+                'label' => 'ID urządzenia obsługującego okno',
+                'required' => true,
             ])
 
             ->add('pin_open', null, [

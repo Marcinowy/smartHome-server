@@ -16,7 +16,8 @@ class MapType extends AbstractType
     {
         $builder
             ->add('name', null, [
-                'label' => 'Nazwa mapy'
+                'label' => 'Nazwa mapy',
+                'required' => true,
             ])
             ->add('image', FileType::class, [
                 'label' => 'Mapa w formacie jpg lub png',

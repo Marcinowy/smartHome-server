@@ -16,7 +16,8 @@ class AddUserType extends AbstractType
     {
         $builder
             ->add('username', null, [
-                'label' => 'Użytkownik'
+                'label' => 'Użytkownik',
+                'required' => true,
             ])
             ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
@@ -26,17 +27,17 @@ class AddUserType extends AbstractType
             ])
             ->add('ROLE_CONTROL', CheckboxType::class, [
                 'label' => 'Pozwól użytkownikowi kontrolować system',
-                'required' => false
+                'required' => false,
             ])
             ->add('ROLE_ADMIN', CheckboxType::class, [
                 'label' => 'Nadaj uprawnienia admina',
-                'required' => false
+                'required' => false,
             ])
             ->add('register', SubmitType::class, [
                 'attr' => [
-                    'class' => 'btn btn-success float-right'
+                    'class' => 'btn btn-success float-right',
                 ],
-                'label' => 'Dodaj użytkownika'
+                'label' => 'Dodaj użytkownika',
             ])
         ;
     }
