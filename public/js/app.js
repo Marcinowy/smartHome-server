@@ -1,10 +1,10 @@
 var getAppData = response => {
     $.ajax({
         url: dataURL,
-        type: 'POST',
+        type: "POST",
         success: response,
         fail: () => {
-            response({'success': false});
+            response({"success": false});
         }
     });
 },
@@ -19,6 +19,8 @@ setWindow = (id, state) => {
     dom.children("div." + correctClass[state]).removeClass("d-none");
 },
 connectionError = text => {
+    $(".app-loader").removeClass("d-none").addClass("d-flex");
+    $(".app").addClass("d-none");
     $("#loading-cont").addClass("d-none");
     $("#error-cont").append("<div>" + text + "</div>");
 };
@@ -27,23 +29,25 @@ $(document).ready(function() {
         var data = output;
         if (data.success) {
             socket = io(data.socketServer, {query: "token=" + data.token, reconnection: false});
-            socket.on('connect_error', () => {
+            socket.on("connect_error", () => {
                 connectionError("Wystąpił problem z połączeniem. Spróbuj ponownie później");
             });
-            socket.on('error', err => {
+            socket.on("disconnect", () => {
+                connectionError("Połączenie z serwerem zostało przerwane. Spróbuj odświeżyć stronę");
+            });
+            socket.on("error", err => {
                 connectionError(err);
             });
-            socket.on('connect', () => {
+            socket.on("connect", () => {
                 var windows = [];
                 $(".window").each(function() {
                     windows.push($(this)[0].dataset.id);
                 });
-                socket.emit('getData', {windows: windows});
+                socket.emit("getData", {windows: windows});
                 $(".app-loader").removeClass("d-flex").addClass("d-none");
                 $(".app").removeClass("d-none");
             });
-            socket.on('data', data => {
-                console.log(data);
+            socket.on("data", data => {
                 for (i in data.windows) {
                     setWindow(data.windows[i].id, data.windows[i].state);
                 }
@@ -53,13 +57,13 @@ $(document).ready(function() {
     $(".close_window").click(function() {
         if (socket.connected) {
             let windowId = $(this).closest(".window")[0].dataset.id;
-            socket.emit('windowControl', {type: 'close', id: windowId});
+            socket.emit("windowControl", {type: "close", id: windowId});
         }
     });
     $(".open_window").click(function() {
         if (socket.connected) {
             let windowId = $(this).closest(".window")[0].dataset.id;
-            socket.emit('windowControl', {type: 'open', id: windowId});
+            socket.emit("windowControl", {type: "open", id: windowId});
         }
     });
 })
